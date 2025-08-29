@@ -1,34 +1,41 @@
 package com.back;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class AppConfig {
-    @Bean
-    public PersonRepository personRepository() {
-        return new PersonRepository(1);
-    }
 
-    @Bean
-    public PersonRepository personRepositoryV2() {
-        return new PersonRepository(2);
-    }
+    @Autowired
+    @Lazy
+    private AppConfig self;
 
     @Bean
     public ApplicationRunner myApplicationRunner3() {
         return args -> {
-            work1();
-            work2();
+
+            // 리얼 객체의 메서드 호출
+            this.work1();
+            this.work1();
+
+            // 프록시 객체의 메서드 호출
+            self.work1();
+            self.work1();
         };
     }
 
+    @Transactional
     public void work1() {
         System.out.println("work1");
     }
 
+    @Transactional
     public void work2() {
         System.out.println("work2");
     }
+
 }
