@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class WiseSayingController {
 
     private final WiseSayingService wiseSayingService;
+    private final Parser parser;
+    private final HtmlRenderer renderer;
 
     @GetMapping("/wiseSaying/write")
     @ResponseBody
@@ -62,12 +64,7 @@ public class WiseSayingController {
 
         WiseSaying wiseSaying = wiseSayingService.findById(id);
 
-        // 파서 & 렌더러 준비
-        Parser parser = Parser.builder().build();
         Node document = parser.parse(wiseSaying.getContent());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-
-        // HTML 변환
         String html = renderer.render(document);
 
         return """
